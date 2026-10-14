@@ -12,7 +12,7 @@ const STATS: Stats = {
   window: 200_000,
   limits: [
     { kind: 'five_hour', percent: 14.5, resetsAt: 10_440_000, resetLabel: null },
-    { kind: 'seven_day', percent: 62, resetsAt: 0, resetLabel: 'Thu 16:00' },
+    { kind: 'seven_day', percent: 62, resetsAt: 7 * 24 * 60 * 60_000, resetLabel: 'Thu 16:00' },
   ],
   cacheAt: null,
   cacheTtl: null,
@@ -54,6 +54,11 @@ test('bad readings do not break the row', () => {
   expect(text(bar(-5, 8, 'green'))).toBe('        ')
   expect(text(bar(NaN, 8, 'green'))).toBe('        ')
   expect(text(rows({ ...STATS, tokens: 5, window: 0 }, 0)[0]!)).toMatch(/\] 0%$/)
+})
+
+test('a limit past its reset shows empty until the next reading', () => {
+  const [, second] = rows(STATS, 10_440_000)
+  expect(text(second!)).toBe('5h [        ] 0% | 7d [████▉   ] 62% ↻ Thu 16:00')
 })
 
 test('second row with only one limit', () => {

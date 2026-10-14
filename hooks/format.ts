@@ -73,7 +73,8 @@ function context(s: Stats, now: number, barWidth: number): Row {
   ]
 }
 
-function limit(label: string, percent: number, reset: string): Row {
+// An unknown reset time shows no reset at all.
+function limit(label: string, percent: number, reset: string | null): Row {
   const p = Math.floor(percent)
   const color = level(p)
   return [
@@ -81,18 +82,22 @@ function limit(label: string, percent: number, reset: string): Row {
     ...bar(p, 8, color),
     { text: '] ' },
     { text: `${p}%`, color },
-    { text: ' ' },
-    { text: `↻ ${reset}`, dim: true },
+    ...(reset === null ? [] : [{ text: ` ↻ ${reset}`, dim: true }]),
   ]
 }
 
 // Both rows; the context bar stretches so the first row is as wide as the second.
 export function rows(s: Stats, now: number): Row[] {
-  const five = s.limits.find(l => l.kind === 'five_hour')
-  const seven = s.limits.find(l => l.kind === 'seven_day')
+  // The engine reports limits only with a response; one whose reset has passed is empty until the next.
+  const find = (kind: string) => {
+    const l = s.limits.find(l => l.kind === kind)
+    return l && l.resetsAt !== null && l.resetsAt <= now ? { ...l, percent: 0, resetsAt: null, resetLabel: null } : l
+  }
+  const five = find('five_hour')
+  const seven = find('seven_day')
   const parts = [
-    ...(five ? [limit('5h', five.percent, five.resetsAt === null ? '?' : left(five.resetsAt - now))] : []),
-    ...(seven ? [limit('7d', seven.percent, seven.resetLabel ?? '?')] : []),
+    ...(five ? [limit('5h', five.percent, five.resetsAt === null ? null : left(five.resetsAt - now))] : []),
+    ...(seven ? [limit('7d', seven.percent, seven.resetLabel)] : []),
   ]
   // Limits come only with a subscription login; without them the first row stands alone.
   if (!parts.length) return [context(s, now, CTX_WIDTH)]
