@@ -1,0 +1,6 @@
+{
+  "name": "claude-mod-statusline",
+  "owner": { "name": "Mariator-pro" },
+  "description": "Two-line usage status under the Claude Code prompt.",
+  "plugins": [{ "name": "usage-bars", "source": "./" }]
+}

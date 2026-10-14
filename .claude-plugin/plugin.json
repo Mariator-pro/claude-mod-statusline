@@ -1,0 +1,7 @@
+{
+  "name": "usage-bars",
+  "version": "0.1.0",
+  "description": "Two-line status under the prompt: model, effort, context bar, prompt cache countdown, 5h and 7d limits with reset times.",
+  "author": { "name": "Mariator-pro" },
+  "types": "./types/index.d.ts"
+}
