@@ -15,20 +15,20 @@ Bars turn yellow and red as they fill. The context bar stretches so both lines a
 /plugin install usage-bars --marketplace Mariator-pro/claude-mod-statusline
 ```
 
-Answer `y` to add the marketplace, then pick a scope. Needs a Claude Code version with mod support. If `statusLine` is set in `~/.claude/settings.json`, remove it, or both show.
+Answer `y` to add the marketplace, then pick a scope. Needs a Claude Code version with mod support. If `statusLine` is set in `~/.claude/settings.json` (on Windows `%USERPROFILE%\.claude\settings.json`), remove it, or both show.
 
 ## Develop
 
 Run from a working copy (reloads on save):
 
 ```
-claude --plugin-dir ~/Projekte/claude-mod-statusline
+claude --plugin-dir <path-to-clone>
 ```
 
 Or for every session, in `~/.claude/settings.json`:
 
 ```json
-"env": { "CLAUDE_CODE_PLUGIN_DIRS": "~/Projekte/claude-mod-statusline" }
+"env": { "CLAUDE_CODE_PLUGIN_DIRS": "/absolute/path/to/claude-mod-statusline" }
 ```
 
 Check and test:
